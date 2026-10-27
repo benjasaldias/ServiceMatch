@@ -55,6 +55,8 @@ const BASE: Record<Tema, Record<string, Hex>> = {
     'primary-soft': '#FFE8D8',
     'primary-ink': '#1A2234',
     'primary-strong': '#B04612',
+    // Estrellas de evaluación: el pastel mantequilla se pierde sobre blanco.
+    rating: '#E8A317',
     'neutral-fg': '#4A556B',
     'neutral-bg': '#EEF1F5',
     'neutral-border': '#D3D9E3',
@@ -77,6 +79,7 @@ const BASE: Record<Tema, Record<string, Hex>> = {
     'primary-soft': '#FFDCC2',
     'primary-ink': '#1A2234',
     'primary-strong': '#FFAD7B',
+    rating: '#FEE099',
     'neutral-fg': '#A8B1C4',
   },
 };
@@ -168,6 +171,7 @@ export default {
         ink: color('primary-ink'),
         strong: color('primary-strong'),
       },
+      rating: color('rating'),
       info: grupoEstado('info'),
       success: grupoEstado('success'),
       warning: grupoEstado('warning'),
