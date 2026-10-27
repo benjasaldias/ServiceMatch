@@ -1,0 +1,29 @@
+{
+  "name": "@servicematch/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts | pino-pretty",
+    "build": "tsup",
+    "start": "node dist/server.js",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "express": "^4.22.3",
+    "pino": "^9.14.0"
+  },
+  "devDependencies": {
+    "@servicematch/config": "workspace:*",
+    "@types/express": "^4.17.25",
+    "@types/node": "^22.20.5",
+    "@types/supertest": "^7.2.1",
+    "pino-pretty": "^13.2.0",
+    "supertest": "^7.3.1",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
+    "typescript": "~5.6.3",
+    "vitest": "^3.2.7"
+  }
+}

@@ -1,0 +1,18 @@
+node_modules/
+dist/
+coverage/
+.vite/
+*.log
+.DS_Store
+
+# Variables de entorno: solo se versiona el ejemplo
+.env
+.env.*
+!.env.example
+
+# Pruebas E2E
+playwright-report/
+test-results/
+
+# Almacenamiento local de archivos en desarrollo (Fase 1)
+storage/
