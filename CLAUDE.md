@@ -10,8 +10,10 @@ Marketplace chileno que conecta hogares con prestadores verificados de servicios
 2. `PROMPT-ServiceMatch-MVP.md`: requisitos, reglas de negocio, modelo de datos, API, seed y pruebas.
    No lo releas completo: ve a la sección que necesites (§7 datos, §8 API, §9 reglas, §10 pagos,
    §12 seed, §16 microcopy).
-3. `docs/mockups/*.png`: fuente visual (layout, orden, densidad, microcopy, estados). Están en tema
-   oscuro; la app usa el tema claro por defecto (decisión del 27-10-2026).
+3. `docs/mockups/*.jpeg`: fuente visual (layout, orden, densidad, microcopy, estados y estilo).
+   Cuando el texto del prompt y un mockup no coinciden, manda el mockup. Las medidas, la escala de
+   las imágenes y esas diferencias están en `docs/mockups/medidas.md`. Los mockups están en tema
+   oscuro; la app usa el claro por defecto con el mismo estilo (decisiones del 27 y 28-10-2026).
 4. `PLAN.md`: fases, calendario, decisiones tomadas y dudas abiertas. Actualízalo al cerrar cada fase.
 5. `packages/config/tailwind-preset.ts`: fuente única de tokens de color, tipografía y forma.
 
@@ -76,38 +78,51 @@ packages/config/   tsconfig base, ESLint, preset de Tailwind
 
 ## Design system
 
-- **Temas**: claro por defecto. El oscuro (paleta de los mockups) se activa con
-  `data-theme="dark"` en `<html>` y no sigue al sistema operativo.
-- **Solo existen los tokens**: la paleta por defecto de Tailwind está desactivada. Colores:
-  `bg`, `surface`, `card(-hover)`, `elevated`, `border(-soft|-strong)`, `text(-muted|-dim)`,
-  `primary(-hover|-soft|-ink|-strong)`, `rating`, `{info,success,warning,danger,purple}` con
-  `-fg`, `-bg` y `-border`, y `neutral-{fg,bg,border}`.
+Medidas completas en `docs/mockups/medidas.md`. Lo esencial:
+
+- **Temas**: claro por defecto, con el mismo estilo de los mockups. El oscuro reproduce los valores
+  medidos y se activa con `data-theme="dark"` en `<html>`; no sigue al sistema operativo.
+- **Estilo de los mockups**: borde de tinta de 2 px (`border-2`; el color por defecto es `tinta`)
+  y sombras duras sin desenfoque: `shadow-tarjeta` (4 px) en tarjetas y paneles, `shadow-control`
+  (3 px) en botones grandes y normales, logo, selector e ítem activo, `shadow-control-sm` (2 px) en
+  botones chicos y chips de filtro seleccionados. Chips de estado, tags, avatares, inputs y avisos
+  no llevan sombra. Lienzo con `fondo-puntos`. Sin degradados ni glassmorphism.
+- **Solo existen los tokens**: la paleta de Tailwind y sus sombras están desactivadas.
+  - Superficies: `bg` (lienzo), `surface` (sidebar, topbar, bottom nav), `card(-hover)`,
+    `elevated` (botón secundario, tarjeta anidada, burbuja recibida, tile), `campo` (inputs).
+  - Líneas: `tinta` (bordes de 2 px y sombras), `linea` (divisores de 1,5 px), `contorno` (chips
+    sin seleccionar, 1,5 px).
+  - Texto: `text`, `text-muted`, `text-dim`.
+  - Naranjo: `primary(-hover|-soft|-ink|-strong|-titulo)`.
+  - Otros: `seleccion(-ink)`, `claro`, `rating(-borde)`, `neutral` y los pastel
+    `{info,success,warning,danger,purple}` con `-fg`.
 - **Reglas de color**:
   - `bg-primary` solo para la acción principal, con texto `text-primary-ink`, nunca blanco.
-  - Naranjo como texto, enlace o foco: `primary-strong`. Sobre `primary-soft`, todo en `primary-ink`.
-  - Los pastel son rellenos (badges sólidos, avatares, pines) con texto `primary-ink`. En claro
-    nunca son color de texto.
-  - Chips de estado: clases `chip-info|success|warning|danger|purple|neutral` más texto e icono.
-    Ningún estado se comunica solo con color.
-  - Bordes de controles (input, checkbox, radio, switch): `border-strong`. El `border` de tarjetas
-    es decorativo.
-  - Sin degradados, glassmorphism ni sombras grandes: borde de 1 px y cambio de superficie.
+  - Naranjo como texto o enlace: `primary-strong`. Títulos grandes en naranjo (saludo, logo):
+    `primary-titulo`. Sobre `primary-soft`, todo en `primary-ink`.
+  - Los pastel son rellenos (tags, avatares, pines, botones Éxito y Peligro) con texto
+    `primary-ink`. Como texto o icono se usa su `-fg`.
+  - Chips de estado y avisos: `border-1.5` más `tono-{info|success|warning|danger|purple|primary|neutral|dim}`,
+    con texto e icono. Nunca sobre `elevated`. Ningún estado se comunica solo con color.
+  - Chip de filtro seleccionado: `bg-seleccion text-seleccion-ink`; sin seleccionar,
+    `border-contorno`.
 - **Tipografía**: `font-display` (Space Grotesk), `font-sans` (DM Sans), `font-mono` (JetBrains
-  Mono). Tamaños `text-titulo-1` (36) / `text-titulo-1-movil` (28), `text-titulo-tarjeta` (18),
-  `text-cuerpo` (14), `text-etiqueta` (12,5), `text-sobretitulo` (12), `text-monto` (30) /
-  `text-monto-tarjeta` (24), `text-metrica` (28). Clase `.sobretitulo` para el rótulo mono en
-  mayúsculas. Nada más va en mayúsculas.
-- **Forma**: `rounded-card` 12, `rounded-control` 10, `rounded-full` para chips y avatares. Botones
-  `h-12` / `h-10` / `h-8`. `w-sidebar` 232 px, `w-aside` 360 px. Móvil: padding 16, bottom nav 64,
-  toques de 44 px o más.
-- **Componentes**: solo las variantes de §5.4. Iconos: solo la lista de §5.6.
-- **Estados (§5.5)**: Solicitado y Cotizado info · Contratado purple · En ejecución warning ·
-  Finalizado success · Cancelado neutral · En disputa danger · Pendiente de pago warning · Pagado
-  success · Rechazado danger · Vence en… warning · Vencida danger · Pendiente de revisión warning ·
-  Verificado success.
+  Mono). Tamaños `text-titulo-1` (36) / `text-titulo-1-movil` (28), `text-titulo-seccion` (20),
+  `text-titulo-tarjeta` (18), `text-titulo-panel` (16), `text-cuerpo` (14), `text-etiqueta`
+  (12,5), `text-sobretitulo` (12), `text-chip` (11), `text-tag` (10), `text-monto` (30),
+  `text-monto-fila` (17) y `text-metrica` (30); montos y métricas en mono. Clase `.sobretitulo`
+  para el rótulo mono. En mayúsculas solo van los sobretítulos y los tags.
+- **Forma**: `rounded-tarjeta` 14, `rounded-control` 10, `rounded-tag` 4, `rounded-full` para
+  chips y avatares. Botones `h-12` / `h-10` / `h-8`. `w-sidebar` 248 px; contenido con padding 32. Móvil: padding 16, topbar 64, bottom nav 84, toques de 44 px o más.
+- **Componentes**: solo las variantes de §5.4 con la forma del UI kit. Iconos: solo la lista de §5.6.
+- **Estados (UI kit)**: Solicitado neutral · Cotizado info · Contratado purple · En ejecución
+  primary · Finalizado success · Cancelado dim · En disputa danger · Pendiente de pago warning ·
+  Pagado success · Rechazado danger · Vence en… warning o success (ver duda en `PLAN.md`) ·
+  Vencida danger · Pendiente de revisión warning · Verificado success · Disponible success · No
+  disponible dim.
 - **Formato chileno**: `formatearClp` (`$41.040`) de `@servicematch/shared`; rating `4,9`;
   distancias `a 1,2 km`; fechas es-CL en `America/Santiago` (`jue 23 oct · 10:30`).
-- **Microcopy**: literal de §16. Nada de frases de marketing.
+- **Microcopy**: literal de §16 y de los mockups. Nada de frases de marketing.
 
 ## Reglas de negocio no negociables
 

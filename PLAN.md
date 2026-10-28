@@ -1,7 +1,8 @@
 # ServiceMatch MVP 1.0 · Plan de trabajo
 
-> **Estado al 27-10-2026:** Fase 0 terminada en la rama `chore/phase-0-setup`, a la espera de
-> revisión. Bloqueo para las fases 2 y 3: faltan los mockups en `docs/mockups/` (duda 1).
+> **Estado al 28-10-2026:** Fase 0 terminada en la rama `chore/phase-0-setup` y ajustada a los
+> mockups, que ya están en `docs/mockups/`. Las tres dudas que bloqueaban quedaron resueltas; lo
+> que queda abierto no detiene la Fase 1.
 
 Hoy es el martes de la semana 9 de 14. Entre el 28-10 y la demo del jueves 10-12 quedan seis
 semanas para las fases 1 a 8, así que el calendario de abajo trabaja en dos frentes en paralelo
@@ -23,19 +24,22 @@ semanas para las fases 1 a 8, así que el calendario de abajo trabaja en dos fre
 - [x] Preset de Tailwind con los tokens: tema claro por defecto y oscuro opcional de los mockups.
 - [x] `formatearClp` con 11 pruebas; ruta `GET /api/v1/health` con prueba de Supertest.
 - [x] `CLAUDE.md` con el resumen operativo y este `PLAN.md`.
-- [x] Propuesta visual de la paleta clara: <https://claude.ai/artifact/ViHnuux8nztLkJ1DcSsq4z>
-      (privada: para que el equipo la vea, compártela desde el menú Share de la página).
-- [ ] Revisar los mockups: no estaban en el repositorio (duda 1).
+- [x] Mockups revisados y medidos: escala, colores, bordes, sombras, radios, tipografía y layout en
+      `docs/mockups/medidas.md`. Tokens del preset ajustados a esas medidas, con 118 pruebas de
+      contraste y de nombres de utilidades.
+- [x] Propuesta visual: <https://claude.ai/artifact/ViHnuux8nztLkJ1DcSsq4z>, actualizada el
+      28-10 con el estilo de los mockups y la comparación lado a lado (privada: para que el
+      equipo la vea, compártela desde el menú Share de la página).
 
-Verificación en esta máquina con Node 22.23.2:
+Verificación en esta máquina con Node 22.23.2 (28-10, después del ajuste a los mockups):
 
-| Comando          | Resultado                                                                 |
-| ---------------- | ------------------------------------------------------------------------- |
-| `pnpm typecheck` | 4 paquetes sin errores                                                    |
-| `pnpm test`      | 12 pruebas pasan (11 de `shared`, 1 de `api`); `web` aún no tiene pruebas |
-| `pnpm build`     | web: 7,9 kB de CSS y 143 kB de JS; api: `dist/server.js`                  |
-| `pnpm lint`      | ESLint y Prettier sin observaciones                                       |
-| `pnpm dev`       | Health responde directo en :3000 y a través del proxy de Vite en :5173    |
+| Comando          | Resultado                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| `pnpm typecheck` | 4 paquetes sin errores                                                                      |
+| `pnpm test`      | 130 pruebas pasan (118 de `config`, 11 de `shared`, 1 de `api`); `web` aún no tiene pruebas |
+| `pnpm build`     | web: 9,3 kB de CSS y 143 kB de JS; api: `dist/server.js`                                    |
+| `pnpm lint`      | ESLint y Prettier sin observaciones                                                         |
+| `pnpm dev`       | Health responde directo en :3000 y a través del proxy de Vite en :5173                      |
 
 Scripts de §4 que todavía no existen: `db:migrate`, `db:seed` y el worker de `pnpm dev` (Fase 1);
 `test:e2e` (Fase 1, con una prueba de humo de login).
@@ -98,14 +102,20 @@ invalida el token vigente.
 ## Fase 2 · Design system
 
 **Entregable:** `/dev/ui` con todos los componentes de §5.4 en ambos temas, para comparar lado a
-lado con `02-ui-kit.png`. Necesita los mockups.
+lado con `02-ui-kit.jpeg`. Medidas en `docs/mockups/medidas.md`.
 
 - [ ] Button, Input, Select, DatePicker, Textarea, Checkbox, Radio, Switch, chip de filtro,
       StatusChip tipado por dominio, Badge, Avatar con rotación estable por `userId`, Rating.
 - [ ] Card, ListRow, StatCard, EmptyState, Skeleton, Alert, ConfirmDialog, Toast.
 - [ ] Stepper de servicio (5 pasos en desktop; «Paso 2 de 5» y puntos en móvil), Sidebar,
       BottomNav, Topbar móvil, QuoteCard, PaymentSummary, Timeline, ChatPanel.
-- [ ] Selector de tema en la cuenta (claro por defecto, oscuro opcional, guardado por usuario).
+- [ ] Logo como componente SVG: cuadrado naranjo con la casa con check y el punto info.
+- [ ] Estados de interacción de las sombras duras (hover y presionado) y foco visible, que los
+      mockups no muestran.
+- [ ] Selector de tema en el menú de la cuenta: claro por defecto, oscuro opcional, guardado en el
+      dispositivo y aplicado antes del primer pintado para que no parpadee.
+- [ ] Superposición de mockup en `/dev/ui` (solo en desarrollo): la imagen encima de la página a
+      su escala real y con opacidad regulable, para calzar medidas al píxel.
 - [ ] Pruebas de Testing Library: StatusChip siempre con texto e icono, Button en carga y
       deshabilitado, cuenta regresiva que se recalcula cada minuto.
 
@@ -119,7 +129,8 @@ lado con `02-ui-kit.png`. Necesita los mockups.
       `GET /pro/agenda`; contadores del sidebar.
 - [ ] Las tres pantallas con su versión móvil propia: bottom nav, tarjetas apiladas y acordeón
       «1 cotización vencida».
-- [ ] Snapshots visuales de Playwright en ambos anchos.
+- [ ] Snapshots visuales de Playwright en ambos anchos, y revisión contra los mockups en tema
+      oscuro con la superposición de `/dev/ui`.
 
 ## Fase 4 · Flujo del cliente
 
@@ -169,17 +180,21 @@ administrador aprueba una verificación y cambia la comisión.
 
 ## Decisiones tomadas en la Fase 0
 
-| Decisión                                                                                                                                                           | Motivo                                                                                               |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| Tema claro por defecto; el oscuro de los mockups queda opcional con `data-theme="dark"` y no sigue al sistema operativo                                            | Pedido del equipo (27-10-2026). Seguir al sistema mostraría el oscuro a parte de los usuarios        |
-| Paleta clara derivada de la oscura: mismos pastel y tinta; naranjo de fondo `#FF8A47`; tokens nuevos `primary-hover`, `primary-strong`, `border-strong` y `rating` | El durazno `#FFAD7B` sobre blanco queda en 1,8:1 y los pastel no sirven como texto sobre fondo claro |
-| En oscuro, `text-dim` pasa de `#76829A` a `#939EB4`                                                                                                                | El valor del mockup queda en 3,3:1 sobre tarjeta (RNF-08 pide AA)                                    |
-| La paleta por defecto de Tailwind está desactivada                                                                                                                 | Que no se pueda salir de los tokens por accidente (§15)                                              |
-| Tamaños con nombres del prompt (`text-titulo-1`, `text-cuerpo`…) y clase `.sobretitulo`                                                                            | Tailwind ya tiene una utilidad `overline`, que es otra cosa                                          |
-| pnpm 10.34 vía corepack, Node 22 en `.nvmrc`, lint-staged 16                                                                                                       | lint-staged 17 exige Node 22.22 y los hooks de git corren con el Node del sistema (20 en tu equipo)  |
-| Paquetes internos con fuente TypeScript; API empaquetada con tsup y ejecutada con tsx en desarrollo                                                                | Evita compilar `shared` por separado                                                                 |
-| `/api` por el proxy de Vite en desarrollo y por un rewrite de Vercel en producción                                                                                 | Mismo origen para que la cookie de refresh funcione con SameSite=Lax                                 |
-| Dominio en español, infraestructura técnica en inglés                                                                                                              | Sigue los nombres del modelo de datos y de los módulos del prompt                                    |
+| Decisión                                                                                                                                                         | Motivo                                                                                               |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Tema claro por defecto; el oscuro de los mockups queda opcional con `data-theme="dark"` y no sigue al sistema operativo                                          | Pedido del equipo (27 y 28-10-2026). Seguir al sistema mostraría el oscuro a parte de los usuarios   |
+| Donde el texto de §5 y los mockups no coinciden, manda el mockup                                                                                                 | Pedido del equipo (28-10) y §0. Las diferencias están en `docs/mockups/medidas.md`                   |
+| Estilo de los mockups en ambos temas: tinta de 2 px y sombras duras de 2, 3 y 4 px, radios 14 / 10 / 4, lienzo con puntos cada 24 px                             | Es lo que muestran las cuatro imágenes; el «borde de 1 px sin sombras» de §5.1 no calza con ellas    |
+| Tema oscuro con los valores medidos; el claro traduce cada rol y mantiene naranjo `#FFAD7B`, durazno, pastel y tinta                                             | Con borde de tinta, los rellenos claros se distinguen sobre blanco (15,9:1) sin oscurecer el naranjo |
+| En claro, naranjo como texto en `primary-strong` (`#B04612`) y títulos grandes en `primary-titulo` (`#D45A1A`); estados con tono profundo y tinte pastel al 30 % | El durazno y los pastel no alcanzan contraste como texto sobre fondo claro                           |
+| En oscuro, `text-dim` pasa de `#76829A` a `#8E9AB0`; es la única desviación de color del mockup                                                                  | El valor del mockup queda en 3,3:1 sobre tarjeta (RNF-08 pide AA)                                    |
+| La paleta y las sombras por defecto de Tailwind están desactivadas                                                                                               | Que no se pueda salir de los tokens por accidente (§15)                                              |
+| Tamaños con nombre propio (`text-titulo-1`, `text-chip`…) medidos en los mockups, y clase `.sobretitulo`                                                         | Tailwind ya tiene una utilidad `overline`, que es otra cosa                                          |
+| Tema elegido guardado en el dispositivo, sin campo nuevo en `usuario`                                                                                            | Opción más conservadora: no toca el modelo de datos                                                  |
+| pnpm 10.34 vía corepack, Node 22 en `.nvmrc`, lint-staged 16                                                                                                     | lint-staged 17 exige Node 22.22 y los hooks de git corren con el Node del sistema (20 en tu equipo)  |
+| Paquetes internos con fuente TypeScript; API empaquetada con tsup y ejecutada con tsx en desarrollo                                                              | Evita compilar `shared` por separado                                                                 |
+| `/api` por el proxy de Vite en desarrollo y por un rewrite de Vercel en producción                                                                               | Mismo origen para que la cookie de refresh funcione con SameSite=Lax                                 |
+| Dominio en español, infraestructura técnica en inglés                                                                                                            | Sigue los nombres del modelo de datos y de los módulos del prompt                                    |
 
 ## Cambios propuestos al modelo de datos
 
@@ -201,7 +216,7 @@ que digas lo contrario:
 | Riesgo                                                                  | Mitigación                                                                                     |
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | Seis semanas para ocho fases                                            | Dos frentes en paralelo; primero lo Must Have; la Fase 7 se va resolviendo dentro de cada fase |
-| Sin mockups no hay fidelidad visual                                     | La Fase 1 no depende de ellos; las fases 2 y 3 esperan los PNG                                 |
+| Los mockups son JPEG reducidos al 82 %, con ±1 px de precisión          | Medidas confirmadas renderizando candidatos; superposición en `/dev/ui`; pedir los originales  |
 | Mercado Pago necesita una URL pública para el webhook                   | `MP_MODE=fake` en local y en E2E; sandbox solo en el ambiente desplegado                       |
 | Las capas gratuitas duermen el contenedor y con él el worker de pg-boss | Worker dentro del proceso de la API en producción; calentar el ambiente antes de la demo       |
 | Nominatim limita a una consulta por segundo                             | Caché de direcciones geocodificadas y respaldo por centroide de comuna                         |
@@ -211,26 +226,27 @@ que digas lo contrario:
 
 Cada duda trae la propuesta que se aplica mientras no haya respuesta.
 
-### Bloquean la próxima fase
+### Resueltas el 28-10
 
-1. **Mockups.** No estaban en el repositorio. ¿Puedes dejar los cuatro PNG en `docs/mockups/` con
-   los nombres de `docs/mockups/README.md`? Propuesta: avanzar la Fase 1, que no depende de ellos.
-2. **Paleta clara.** ¿La apruebas tal como está en la propuesta visual? Conviene mirar dos cosas:
-   el naranjo de fondo más intenso (`#FF8A47`) y el saludo «Hola, Camila» en óxido (`#B04612`).
-3. **Tema oscuro.** ¿Se mantiene como opción en la cuenta o se elimina? Propuesta: se mantiene,
-   porque con los tokens cuesta poco y sirve para comparar contra los mockups.
+1. **Mockups.** Están en `docs/mockups/` con los nombres de §0 (en JPEG) y medidos en
+   `docs/mockups/medidas.md`.
+2. **Paleta y estilo.** Se ajustan estrictamente a los mockups: el oscuro usa sus valores y el
+   claro traduce el mismo estilo. La propuesta visual muestra la comparación lado a lado.
+3. **Tema oscuro.** Se mantiene como opción, no como principal.
 
 ### Producto y reglas
 
-4. **Filtro «Disponible ahora».** El mockup lo muestra activo y a la vez muestra a Luis Herrera
-   (no disponible) atenuado. Propuesta: con el filtro activo, los no disponibles quedan fuera; sin
+4. **Filtro «Disponible ahora».** El mockup `01` lo muestra activo y a la vez muestra a Luis
+   Herrera (no disponible) atenuado. Propuesta: con el filtro activo, los no disponibles quedan fuera; sin
    filtro, aparecen al final atenuados. Para reproducir el mockup, ¿qué estado manda?
 5. **Filtro «Verificados».** Por RN-02 solo aparecen prestadores verificados, así que el filtro no
    filtra nada. Propuesta: chip informativo fijo, no removible.
 6. **Contadores del seed.** «Mis solicitudes (2)» pide una segunda solicitud de Camila;
    «Solicitudes nuevas (3)» pide una tercera solicitud abierta (§12 trae dos); «Cotizaciones
-   enviadas 5» no calza con el detalle, que suma cuatro. Propuesta: agregar lo mínimo para que
-   calcen los números y ajustarlo cuando vea los mockups.
+   enviadas 5» no calza con «Mis cotizaciones», que muestra cuatro. Los mockups confirman los
+   números: Mis solicitudes 2, Cotizaciones 3 y Notificaciones 4 para Camila; Solicitudes 3,
+   Notificaciones 2, «2 aceptadas este mes» y «Trabajos esta semana 4 (2 hoy · 2 el jueves)» para
+   Pedro. Propuesta: agregar al seed lo mínimo para que calcen todos.
 7. **Correos de los prestadores de demo.** §12 no los da. Propuesta: `pedro@demo.cl`,
    `andrea@demo.cl`, `javiera@demo.cl`, `luis@demo.cl`.
 8. **Referencia en Mercado Pago.** §10 usa `external_reference = servicio.id`, pero cada cargo
@@ -255,11 +271,13 @@ pago.id`, porque el pago ya apunta a su servicio.
 
 ### Accesibilidad
 
-16. **Placeholder en oscuro.** Sobre las celdas internas queda en 4,2:1. ¿Se acepta para texto de
-    ejemplo o subimos `text-dim` oscuro a `#9AA5BA`? Propuesta: aceptarlo, porque los campos
-    siempre llevan etiqueta arriba.
-17. **Bordes de input.** Usan `border-strong` (3:1) en ambos temas; en oscuro se ven más marcados
-    que en el mockup. Propuesta: mantenerlo por WCAG 1.4.11.
+16. **Placeholder en oscuro.** Resuelta: los placeholders van sobre `campo`, donde `text-dim`
+    queda en 5,0:1.
+17. **Bordes de controles en oscuro.** Como en el mockup, inputs, checkbox y radio llevan borde de
+    tinta, que sobre tarjeta queda en 1,5:1; WCAG 1.4.11 pide 3:1 para el contorno de un control.
+    El tema claro cumple (15,9:1). Propuesta: mantener el mockup en el oscuro, que es opcional. Si
+    se exige AA también ahí, esos bordes pasan a `contorno` (3,7:1) y se ven más grises que en la
+    imagen.
 
 ### Infraestructura y cuentas
 
@@ -271,3 +289,17 @@ pago.id`, porque el pago ya apunta a su servicio.
     mantener lo que fija el stack.
 20. **Prompt sin versionar.** `PROMPT-ServiceMatch-MVP.md` no está en git. ¿Lo muevo a `docs/` y lo
     commiteo para que el equipo lo tenga?
+
+### Surgen de comparar el prompt con los mockups
+
+21. **Color de «Contratado».** El UI kit lo pinta morado y la agenda de `04` lo muestra celeste.
+    Propuesta: morado, como en el kit, que es el que define la taxonomía.
+22. **Color de «Vence en…».** El mockup pinta «Vence en 6 h» amarillo y «Vence en 2 días» verde;
+    §5.5 solo nombra el amarillo. Propuesta: amarillo con menos de 24 h de vigencia y verde desde
+    24 h.
+23. **Mapa.** El mockup muestra un mapa ilustrado (manzanas y avenidas en tonos del tema) y el
+    stack fija Leaflet con teselas de OSM. Propuesta: teselas estándar de OSM en claro y las mismas
+    con un filtro CSS oscuro en el tema oscuro; pines de precio, radio y leyenda como en el
+    mockup.
+24. **Imágenes originales.** Si existen los PNG originales o el archivo de diseño, conviene
+    dejarlos en `docs/mockups/`: los JPEG de WhatsApp limitan la precisión a ±1 px.
