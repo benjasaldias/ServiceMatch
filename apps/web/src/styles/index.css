@@ -4,6 +4,6 @@
 
 @layer base {
   body {
-    @apply bg-bg font-sans text-cuerpo text-text antialiased;
+    @apply fondo-puntos font-sans text-cuerpo text-text antialiased;
   }
 }

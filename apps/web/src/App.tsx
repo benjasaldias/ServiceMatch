@@ -3,9 +3,9 @@
 export function App() {
   return (
     <main className="grid min-h-screen place-items-center p-4">
-      <section className="w-full max-w-md rounded-card border bg-card p-6">
+      <section className="w-full max-w-md rounded-tarjeta border-2 bg-card p-6 shadow-tarjeta">
         <p className="sobretitulo">ServiceMatch · MVP 1.0</p>
-        <h1 className="mt-2 font-display text-titulo-1-movil text-primary-strong md:text-titulo-1">
+        <h1 className="mt-2 font-display text-titulo-1-movil text-primary-titulo md:text-titulo-1">
           Estructura lista
         </h1>
         <p className="mt-2 text-text-muted">

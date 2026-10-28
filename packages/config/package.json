@@ -9,7 +9,8 @@
     "./tsconfig/*": "./tsconfig/*"
   },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
   },
   "dependencies": {
     "@eslint/js": "^9.39.5",
@@ -22,6 +23,7 @@
     "typescript-eslint": "^8.72.1"
   },
   "devDependencies": {
-    "typescript": "~5.6.3"
+    "typescript": "~5.6.3",
+    "vitest": "^3.2.7"
   }
 }

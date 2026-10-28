@@ -1,4 +1,4 @@
 {
   "extends": "./tsconfig/node.json",
-  "include": ["tailwind-preset.ts"]
+  "include": ["tailwind-preset.ts", "tailwind-preset.test.ts"]
 }
