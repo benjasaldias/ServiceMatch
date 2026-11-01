@@ -16,3 +16,8 @@ test-results/
 
 # Almacenamiento local de archivos en desarrollo (Fase 1)
 storage/
+
+# Documentos de planificación: solo se versionan CLAUDE.md y el README raíz
+*.md
+!CLAUDE.md
+!/README.md
