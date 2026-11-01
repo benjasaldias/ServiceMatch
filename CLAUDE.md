@@ -7,7 +7,7 @@ Marketplace chileno que conecta hogares con prestadores verificados de servicios
 ## Fuentes de verdad
 
 1. Lo que pida el usuario en la sesión.
-2. `PROMPT-ServiceMatch-MVP.md`: requisitos, reglas de negocio, modelo de datos, API, seed y pruebas.
+2. `docs/PROMPT-ServiceMatch-MVP.md`: requisitos, reglas de negocio, modelo de datos, API, seed y pruebas.
    No lo releas completo: ve a la sección que necesites (§7 datos, §8 API, §9 reglas, §10 pagos,
    §12 seed, §16 microcopy).
 3. `docs/mockups/*.jpeg`: fuente visual (layout, orden, densidad, microcopy, estados y estilo).
@@ -117,7 +117,7 @@ Medidas completas en `docs/mockups/medidas.md`. Lo esencial:
 - **Componentes**: solo las variantes de §5.4 con la forma del UI kit. Iconos: solo la lista de §5.6.
 - **Estados (UI kit)**: Solicitado neutral · Cotizado info · Contratado purple · En ejecución
   primary · Finalizado success · Cancelado dim · En disputa danger · Pendiente de pago warning ·
-  Pagado success · Rechazado danger · Vence en… warning o success (ver duda en `PLAN.md`) ·
+  Pagado success · Rechazado danger · Vence en… warning con menos de 24 h y success desde 24 h ·
   Vencida danger · Pendiente de revisión warning · Verificado success · Disponible success · No
   disponible dim.
 - **Formato chileno**: `formatearClp` (`$41.040`) de `@servicematch/shared`; rating `4,9`;

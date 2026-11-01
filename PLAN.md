@@ -1,8 +1,9 @@
 # ServiceMatch MVP 1.0 · Plan de trabajo
 
-> **Estado al 28-10-2026:** Fase 0 terminada en la rama `chore/phase-0-setup` y ajustada a los
-> mockups, que ya están en `docs/mockups/`. Las tres dudas que bloqueaban quedaron resueltas; lo
-> que queda abierto no detiene la Fase 1.
+> **Estado al 01-11-2026:** Fase 0 terminada en la rama `chore/phase-0-setup`, ajustada a los
+> mockups y sin dudas abiertas: todas quedaron como decisiones al final de este plan. La Fase 1
+> parte el 02-11, cinco días después de lo previsto; el atraso se absorbe llevando las fases 1 y 2
+> en paralelo, como ya proponía el calendario.
 
 Hoy es el martes de la semana 9 de 14. Entre el 28-10 y la demo del jueves 10-12 quedan seis
 semanas para las fases 1 a 8, así que el calendario de abajo trabaja en dos frentes en paralelo
@@ -36,7 +37,7 @@ Verificación en esta máquina con Node 22.23.2 (28-10, después del ajuste a lo
 | Comando          | Resultado                                                                                   |
 | ---------------- | ------------------------------------------------------------------------------------------- |
 | `pnpm typecheck` | 4 paquetes sin errores                                                                      |
-| `pnpm test`      | 130 pruebas pasan (118 de `config`, 11 de `shared`, 1 de `api`); `web` aún no tiene pruebas |
+| `pnpm test`      | 139 pruebas pasan (118 de `config`, 20 de `shared`, 1 de `api`); `web` aún no tiene pruebas |
 | `pnpm build`     | web: 9,3 kB de CSS y 143 kB de JS; api: `dist/server.js`                                    |
 | `pnpm lint`      | ESLint y Prettier sin observaciones                                                         |
 | `pnpm dev`       | Health responde directo en :3000 y a través del proxy de Vite en :5173                      |
@@ -76,7 +77,7 @@ Reparto sugerido por frente, para que lo ajustes como gerente de proyecto:
 - [ ] `docker-compose.yml` con Postgres 16 y Mailpit; script de inicio que crea el rol de
       ejecución `servicematch_app`. `.env.example` con todas las variables.
 - [ ] Prisma 5 con el esquema completo de §7 más las tablas y campos de la sección
-      «Cambios propuestos al modelo de datos». Migración SQL explícita con los CHECK, índices y
+      «Cambios al modelo de datos». Migración SQL explícita con los CHECK, índices y
       `REVOKE` de §7, y una secuencia para los códigos `SM-####`.
 - [ ] Dos conexiones: `DATABASE_URL` con `servicematch_app` para la app y `MIGRATION_DATABASE_URL`
       con el dueño del esquema, porque `REVOKE UPDATE, DELETE` exige que la app no sea dueña de
@@ -123,7 +124,7 @@ lado con `02-ui-kit.jpeg`. Medidas en `docs/mockups/medidas.md`.
 
 **Entregable:** `/buscar`, `/solicitudes/:id` y `/pro` con datos reales del seed, en 1440 px y 390 px.
 
-- [ ] Seed completo de §12 con fechas relativas a la ejecución (ver duda 14).
+- [ ] Seed completo de §12 con fechas relativas a la ejecución (decisión 14).
 - [ ] Lectura: `GET /profesionales` con filtros, distancia y orden degradado si falla la
       geolocalización; `GET /solicitudes/:id` con cotizaciones y chat; `GET /pro/inicio`,
       `GET /pro/agenda`; contadores del sidebar.
@@ -196,10 +197,9 @@ administrador aprueba una verificación y cambia la comisión.
 | `/api` por el proxy de Vite en desarrollo y por un rewrite de Vercel en producción                                                                               | Mismo origen para que la cookie de refresh funcione con SameSite=Lax                                 |
 | Dominio en español, infraestructura técnica en inglés                                                                                                            | Sigue los nombres del modelo de datos y de los módulos del prompt                                    |
 
-## Cambios propuestos al modelo de datos
+## Cambios al modelo de datos
 
-El esquema de §7 no alcanza para varias reglas del propio prompt. Se agregan en la Fase 1 salvo
-que digas lo contrario:
+El esquema de §7 no alcanza para varias reglas del propio prompt. Se agregan en la Fase 1:
 
 1. Tabla `sesion_refresh` (hash del token, familia, expiración, revocación, reemplazo): el refresh
    opaco rotatorio de §11 necesita guardarse.
@@ -213,93 +213,80 @@ que digas lo contrario:
 
 ## Riesgos
 
-| Riesgo                                                                  | Mitigación                                                                                     |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Seis semanas para ocho fases                                            | Dos frentes en paralelo; primero lo Must Have; la Fase 7 se va resolviendo dentro de cada fase |
-| Los mockups son JPEG reducidos al 82 %, con ±1 px de precisión          | Medidas confirmadas renderizando candidatos; superposición en `/dev/ui`; pedir los originales  |
-| Mercado Pago necesita una URL pública para el webhook                   | `MP_MODE=fake` en local y en E2E; sandbox solo en el ambiente desplegado                       |
-| Las capas gratuitas duermen el contenedor y con él el worker de pg-boss | Worker dentro del proceso de la API en producción; calentar el ambiente antes de la demo       |
-| Nominatim limita a una consulta por segundo                             | Caché de direcciones geocodificadas y respaldo por centroide de comuna                         |
-| ESLint 9 ya no tiene soporte y TypeScript 5.6 quedó atrás               | Se mantienen porque así lo fija el stack (duda 19)                                             |
+| Riesgo                                                                  | Mitigación                                                                                            |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Seis semanas para ocho fases                                            | Dos frentes en paralelo; primero lo Must Have; la Fase 7 se va resolviendo dentro de cada fase        |
+| Los mockups son JPEG reducidos al 82 %, con ±1 px de precisión          | Medidas confirmadas renderizando candidatos; superposición en `/dev/ui`; sumar originales si aparecen |
+| Mercado Pago necesita una URL pública para el webhook                   | `MP_MODE=fake` en local y en E2E; sandbox solo en el ambiente desplegado                              |
+| Las capas gratuitas duermen el contenedor y con él el worker de pg-boss | Worker dentro del proceso de la API en producción; calentar el ambiente antes de la demo              |
+| Nominatim limita a una consulta por segundo                             | Caché de direcciones geocodificadas y respaldo por centroide de comuna                                |
+| ESLint 9 ya no tiene soporte y TypeScript 5.6 quedó atrás               | Se mantienen porque así lo fija el stack (decisión 19)                                                |
 
-## Dudas abiertas
+## Decisiones de producto, reglas e infraestructura
 
-Cada duda trae la propuesta que se aplica mientras no haya respuesta.
+Todas las dudas quedaron cerradas el 01-11-2026. Se conserva la numeración porque el resto del plan
+las cita. Si el equipo quiere cambiar alguna, se reabre aquí.
 
-### Resueltas el 28-10
+### Mockups, paleta y tema (28-10)
 
 1. **Mockups.** Están en `docs/mockups/` con los nombres de §0 (en JPEG) y medidos en
    `docs/mockups/medidas.md`.
-2. **Paleta y estilo.** Se ajustan estrictamente a los mockups: el oscuro usa sus valores y el
-   claro traduce el mismo estilo. La propuesta visual muestra la comparación lado a lado.
-3. **Tema oscuro.** Se mantiene como opción, no como principal.
+2. **Paleta y estilo.** Siguen estrictamente a los mockups: el oscuro usa sus valores y el claro
+   traduce el mismo estilo.
+3. **Tema oscuro.** Opcional, no principal.
 
 ### Producto y reglas
 
-4. **Filtro «Disponible ahora».** El mockup `01` lo muestra activo y a la vez muestra a Luis
-   Herrera (no disponible) atenuado. Propuesta: con el filtro activo, los no disponibles quedan fuera; sin
-   filtro, aparecen al final atenuados. Para reproducir el mockup, ¿qué estado manda?
-5. **Filtro «Verificados».** Por RN-02 solo aparecen prestadores verificados, así que el filtro no
-   filtra nada. Propuesta: chip informativo fijo, no removible.
-6. **Contadores del seed.** «Mis solicitudes (2)» pide una segunda solicitud de Camila;
-   «Solicitudes nuevas (3)» pide una tercera solicitud abierta (§12 trae dos); «Cotizaciones
-   enviadas 5» no calza con «Mis cotizaciones», que muestra cuatro. Los mockups confirman los
-   números: Mis solicitudes 2, Cotizaciones 3 y Notificaciones 4 para Camila; Solicitudes 3,
-   Notificaciones 2, «2 aceptadas este mes» y «Trabajos esta semana 4 (2 hoy · 2 el jueves)» para
-   Pedro. Propuesta: agregar al seed lo mínimo para que calcen todos.
-7. **Correos de los prestadores de demo.** §12 no los da. Propuesta: `pedro@demo.cl`,
-   `andrea@demo.cl`, `javiera@demo.cl`, `luis@demo.cl`.
-8. **Referencia en Mercado Pago.** §10 usa `external_reference = servicio.id`, pero cada cargo
-   adicional genera su propio cobro sobre el mismo servicio. Propuesta: `external_reference =
-pago.id`, porque el pago ya apunta a su servicio.
-9. **Comisión en cargos adicionales.** ¿Se cobra? Propuesta: sí, con el mismo `comision_pct`
-   congelado al contratar.
-10. **Plazo de reclamo.** §9.1 lo menciona sin definirlo. Propuesta: 7 días desde `finalizado_en`,
-    configurable por variable de entorno.
-11. **Cancelación después de pagar.** Propuesta: la cancelación crea un `reembolso` en estado
-    `solicitado`, que el administrador aprueba o rechaza. La interfaz avisa que puede haber
-    condiciones y no promete devolución.
-12. **Pantalla de ganancias.** Sin liquidaciones automáticas, ¿qué dice? Propuesta: «Montos de
-    servicios pagados. La transferencia al prestador no se hace desde la plataforma durante el MVP.»
-13. **Contacto escrito en el chat.** RN-05 oculta teléfono y correo en la API, pero un usuario puede
-    escribirlos en un mensaje. Propuesta: no filtrar mensajes en el MVP, porque no está en §2.
-14. **Fechas del seed.** «Vence en 6 h» junto a «hoy 20:00» solo calza si el seed corre a las 14:00.
-    Propuesta: vencimiento en ahora + 6 h y publicación a las 09:12 de hoy (o hace 5 minutos si el
-    seed corre antes de esa hora).
-15. **Badge BORRADOR.** Ni la solicitud ni la cotización tienen estado borrador. Propuesta: se usa
-    para el borrador local del editor de cotización, que no se guarda en la API.
+4. **Filtro «Disponible ahora».** El chip ordena: primero los prestadores con disponibilidad hoy y
+   al final los demás, atenuados, con «No disponible» y sin poder pedir cotización. Así se reproduce
+   el mockup `01` (chip activo y Luis Herrera atenuado al final) sin esconder opciones al cliente.
+5. **Filtro «Verificados».** Chip informativo fijo, no removible: por RN-02 solo aparecen
+   verificados.
+6. **Contadores del seed.** El seed agrega lo mínimo para que calcen todos los números de los
+   mockups: segunda solicitud de Camila, tercera solicitud abierta para Pedro, una quinta
+   cotización enviada por Pedro (fuera de la lista de cuatro que muestra el panel) y las
+   notificaciones (4 de Camila, 2 de Pedro).
+7. **Correos de demo.** `pedro@demo.cl`, `andrea@demo.cl`, `javiera@demo.cl`, `luis@demo.cl`.
+8. **Referencia en Mercado Pago.** `external_reference = pago.id`: cada cargo adicional tiene su
+   propio cobro y el pago ya apunta a su servicio.
+9. **Comisión en cargos adicionales.** Se cobra con el mismo `comision_pct` congelado al contratar.
+10. **Plazo de reclamo.** 7 días desde `finalizado_en`, en la variable `PLAZO_DISPUTA_DIAS`.
+11. **Cancelación después de pagar.** Crea un `reembolso` en estado `solicitado` que el
+    administrador aprueba o rechaza. La interfaz avisa que se revisa caso a caso y no promete
+    devolución.
+12. **Pantalla de ganancias.** «Montos de servicios pagados. La transferencia al prestador no se hace
+    desde la plataforma durante el MVP.»
+13. **Contacto escrito en el chat.** No se filtran mensajes en el MVP: no está en §2.
+14. **Fechas del seed.** Relativas a la ejecución: vencimiento en ahora + 6 h y publicación a las
+    09:12 de hoy, o hace 5 minutos si el seed corre antes de esa hora.
+15. **Tag BORRADOR.** Para el borrador local del editor de cotización, que no se guarda en la API.
 
 ### Accesibilidad
 
-16. **Placeholder en oscuro.** Resuelta: los placeholders van sobre `campo`, donde `text-dim`
-    queda en 5,0:1.
-17. **Bordes de controles en oscuro.** Como en el mockup, inputs, checkbox y radio llevan borde de
-    tinta, que sobre tarjeta queda en 1,5:1; WCAG 1.4.11 pide 3:1 para el contorno de un control.
-    El tema claro cumple (15,9:1). Propuesta: mantener el mockup en el oscuro, que es opcional. Si
-    se exige AA también ahí, esos bordes pasan a `contorno` (3,7:1) y se ven más grises que en la
-    imagen.
+16. **Placeholder en oscuro.** Van sobre `campo`, donde `text-dim` queda en 5,0:1.
+17. **Bordes de controles en oscuro.** Se mantiene el borde de tinta del mockup. El tema principal
+    cumple WCAG 1.4.11 (15,9:1) y en el oscuro el estado se distingue igual: el control marcado
+    cambia de relleno y el foco usa el anillo naranjo (7:1). Cambiarlo a `contorno` sería una línea
+    del preset.
 
 ### Infraestructura y cuentas
 
-18. **Servicios externos.** Propuesta: Vercel (web), Render o Fly.io (API y worker en un
-    contenedor), Neon (Postgres 16), Cloudflare R2 (archivos), Nominatim (geocodificación) y Mailpit
-    en desarrollo. ¿Hay cuentas creadas o preferencias? ¿Quién crea los usuarios de prueba de
-    Mercado Pago (vendedor y comprador)?
-19. **Versiones.** ESLint 9 ya no tiene soporte (existe la 10) y TypeScript va en la 7. Propuesta:
-    mantener lo que fija el stack.
-20. **Prompt sin versionar.** `PROMPT-ServiceMatch-MVP.md` no está en git. ¿Lo muevo a `docs/` y lo
-    commiteo para que el equipo lo tenga?
+18. **Servicios externos.** Vercel (web), Render (API y worker de pg-boss en el mismo contenedor),
+    Neon (Postgres 16), Cloudflare R2 (archivos privados), Nominatim con caché (geocodificación) y
+    Mailpit en desarrollo; todos en capa gratuita. Agustín Jadue crea las cuentas de Mercado Pago
+    (vendedor y comprador de prueba) y las de los servicios, en la Fase 4; las credenciales van
+    solo en las variables de entorno de cada servicio.
+19. **Versiones.** Se mantiene lo que fija el stack (ESLint 9, TypeScript 5.6).
+20. **Prompt.** Versionado en `docs/PROMPT-ServiceMatch-MVP.md`.
 
-### Surgen de comparar el prompt con los mockups
+### Diferencias entre el prompt y los mockups
 
-21. **Color de «Contratado».** El UI kit lo pinta morado y la agenda de `04` lo muestra celeste.
-    Propuesta: morado, como en el kit, que es el que define la taxonomía.
-22. **Color de «Vence en…».** El mockup pinta «Vence en 6 h» amarillo y «Vence en 2 días» verde;
-    §5.5 solo nombra el amarillo. Propuesta: amarillo con menos de 24 h de vigencia y verde desde
-    24 h.
-23. **Mapa.** El mockup muestra un mapa ilustrado (manzanas y avenidas en tonos del tema) y el
-    stack fija Leaflet con teselas de OSM. Propuesta: teselas estándar de OSM en claro y las mismas
-    con un filtro CSS oscuro en el tema oscuro; pines de precio, radio y leyenda como en el
-    mockup.
-24. **Imágenes originales.** Si existen los PNG originales o el archivo de diseño, conviene
-    dejarlos en `docs/mockups/`: los JPEG de WhatsApp limitan la precisión a ±1 px.
+21. **Color de «Contratado».** Morado, como en el UI kit, que define la taxonomía; la agenda de
+    `04` se construye con ese color.
+22. **Color de «Vence en…».** Amarillo (`warning`) con menos de 24 h de vigencia y verde
+    (`success`) desde 24 h. Lo calcula una función de `packages/shared` con pruebas.
+23. **Mapa.** Leaflet con teselas estándar de OSM en claro y las mismas con filtro CSS oscuro en el
+    tema oscuro. Pines de precio, radio y leyenda como en el mockup.
+24. **Imágenes originales.** Se trabaja con los JPEG y las medidas de `docs/mockups/medidas.md`
+    (±1 px). Si aparecen los PNG o el archivo de diseño, se agregan a `docs/mockups/` y se
+    re-miden los valores dudosos.

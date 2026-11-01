@@ -163,8 +163,8 @@ va en `primary-soft` con borde y sombra.
 | Pago         | Pendiente de pago     | `warning` | clock          |
 | Pago         | Pagado                | `success` | check          |
 | Pago         | Rechazado             | `danger`  | x              |
-| Vigencia     | Vence en 6 h          | `warning` | sin icono      |
-| Vigencia     | Vence en 2 días       | `success` | sin icono      |
+| Vigencia     | Vence en… (< 24 h)    | `warning` | sin icono      |
+| Vigencia     | Vence en… (≥ 24 h)    | `success` | sin icono      |
 | Vigencia     | Vencida               | `danger`  | sin icono      |
 | Verificación | Pendiente de revisión | `warning` | clock          |
 | Verificación | Verificado            | `success` | shield-check   |
